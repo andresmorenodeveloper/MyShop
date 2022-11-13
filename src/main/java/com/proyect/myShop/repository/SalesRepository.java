@@ -5,13 +5,13 @@
  */
 package com.proyect.myShop.repository;
 
-import com.proyect.myShop.models.Products;
+import com.proyect.myShop.models.Sales;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author anmoreno
  */
-public interface ProductsRepository extends JpaRepository<Products, Long> {
-
+public interface SalesRepository extends JpaRepository<Sales, Long>{
+    
 }

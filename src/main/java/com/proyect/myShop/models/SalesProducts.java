@@ -5,12 +5,14 @@
  */
 package com.proyect.myShop.models;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,27 +24,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "products")
-public class Products implements Serializable {
+@Table(name = "sales_products")
+public class SalesProducts {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale", referencedColumnName = "id")
+    private Sales sale;
 
-    @Column(name = "size")
-    private String size;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product", referencedColumnName = "id")
+    private Products product;
 
-    @Column(name = "gender")
-    private String gender;
+    @Column(name = "quantity")
+    private Long quantity;
 
     @Column(name = "price")
     private Double price;
-
-    @Column(name = "image")
-    private String image;
-
 }

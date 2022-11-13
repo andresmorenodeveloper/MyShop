@@ -5,12 +5,15 @@
  */
 package com.proyect.myShop.models;
 
-import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,27 +25,29 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "products")
-public class Products implements Serializable {
+@Table(name = "sales")
+public class Sales {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "document_type")
+    private String documentType;
 
-    @Column(name = "size")
-    private String size;
+    @Column(name = "document_number")
+    private String documentNumber;
 
-    @Column(name = "gender")
-    private String gender;
+    @Column(name = "person_name")
+    private String personName;
 
-    @Column(name = "price")
-    private Double price;
+    @Column(name = "date_delivery")
+    private Timestamp dateDelivery;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "address")
+    private String address;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sale")
+    private List<SalesProducts> listSalesProducts;
 }

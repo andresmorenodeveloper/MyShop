@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * @author jdesquivia
+ * @author anmoreno
  */
 @Service
 public class ProductsService {

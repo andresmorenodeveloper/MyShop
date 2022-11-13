@@ -3,15 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.proyect.myShop.repository;
+package com.proyect.myShop.validates;
 
-import com.proyect.myShop.models.Products;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author anmoreno
  */
-public interface ProductsRepository extends JpaRepository<Products, Long> {
 
+@Service
+public class SalesValidate {
+    
+    public void validate(){
+    
+    }
 }
