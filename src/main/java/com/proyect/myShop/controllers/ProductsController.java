@@ -5,6 +5,8 @@
  */
 package com.proyect.myShop.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.proyect.myShop.dto.ProductsDTO;
 import com.proyect.myShop.models.Products;
 import com.proyect.myShop.service.ProductsService;
@@ -14,6 +16,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +37,8 @@ public class ProductsController {
 
     @Autowired
     private ProductsService productsService;
+    
+    Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
 
     @GetMapping
     @ApiOperation(value = "Listar registros", notes = "Servicio para listar todos los registros")
@@ -48,7 +54,7 @@ public class ProductsController {
             listProducts.forEach((entity) -> {
                 listProductsDto.add(productsService.getDto(entity));
             });
-
+            printDto(listProductsDto);
             response.setData(listProductsDto);
             response.setMessage("Consulta realizada correctamente");
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -57,6 +63,15 @@ public class ProductsController {
             response.setMessage("No se encontro informacion");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
+    }
+
+    public void printDto(List<ProductsDTO> listProductsDto) {
+
+        System.out.println("INFORMACION DE LOS PRODUCTOS");
+        System.out.println("**********************************");
+        System.out.println(gson1.toJson(listProductsDto));
+        System.out.println("**********************************");
+
     }
 
 }

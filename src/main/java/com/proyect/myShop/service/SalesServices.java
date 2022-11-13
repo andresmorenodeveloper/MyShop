@@ -12,6 +12,7 @@ import com.proyect.myShop.repository.SalesRepository;
 import com.proyect.myShop.validates.SalesValidate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,23 +30,18 @@ public class SalesServices {
     @Autowired
     SalesValidate salesValidate;
     
-    public void createSale(){
-        
-        salesValidate.validate();
-        
-        Sales sales = new Sales();
-        
-        
-        List<SalesProducts> listSalesProducts = new ArrayList<SalesProducts>();
-        
-        
-        sales.setListSalesProducts(listSalesProducts);
-        
-        salesRepository.save(sales);
+    public Sales create(Sales sales){        
+        return salesRepository.save(sales);
     }
     
-        public List<Sales> getAll() {
-        return salesRepository.findAll();
+        public List<Sales> getAll(Map<String, String[]> filters) {
+          
+          String documentNumber = filters.get("documentNumber") == null ? null : filters.get("documentNumber")[0].toString();  
+          List<Sales> listSales = salesRepository.findAll();
+          if(!listSales.isEmpty() && !documentNumber.isEmpty()){
+              listSales.stream().filter(s -> s.getDocumentNumber().equals(documentNumber)).findFirst().orElse(null);
+          }
+        return listSales;
     }
 
     public SalesDTO getDto(Sales entity) {
@@ -58,5 +54,15 @@ public class SalesServices {
         salesDto.setAddress(entity.getAddress());
         
         return salesDto;
+    }
+    
+    public Sales getEntity(SalesDTO dto){
+        Sales sales = new Sales();
+        sales.setDocumentType(dto.getDocumentType());
+        sales.setDocumentNumber(dto.getDocumentNumber());
+        sales.setPersonName(dto.getPersonName());
+        sales.setDateDelivery(dto.getDateDelivery());
+        sales.setAddress(dto.getAddress());        
+        return sales;
     }
 }
