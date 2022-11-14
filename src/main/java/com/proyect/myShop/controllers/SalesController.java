@@ -80,7 +80,7 @@ public class SalesController {
         @ApiResponse(code = 201, message = "Registro creado correctamente"),
         @ApiResponse(code = 400, message = "Solicitud no valida")})
     public ResponseEntity<Response> create(HttpServletRequest request, @RequestBody @Validated SalesDTO dto) {
-        Response response = new Response();
+        Response<SalesDTO> response = new Response<SalesDTO>();
 
         Sales entity = salesServices.create(salesServices.getEntity(dto));
         if (entity != null) {

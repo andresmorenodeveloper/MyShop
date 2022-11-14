@@ -5,7 +5,9 @@
  */
 package com.proyect.myShop.service;
 
+import com.proyect.myShop.dto.ProductsDTO;
 import com.proyect.myShop.dto.SalesDTO;
+import com.proyect.myShop.models.Products;
 import com.proyect.myShop.models.Sales;
 import com.proyect.myShop.models.SalesProducts;
 import com.proyect.myShop.repository.SalesRepository;
@@ -29,6 +31,9 @@ public class SalesServices {
 
 	@Autowired
 	SalesValidate salesValidate;
+	
+	@Autowired
+	ProductsService productsService;
 
 	public Sales create(Sales sales) {
 		return salesRepository.save(sales);
@@ -36,12 +41,12 @@ public class SalesServices {
 
 	public List<Sales> getAll(Map<String, String[]> filters) {
 		List<Sales> listSales = new ArrayList<Sales>();
-		
-		String documentNumber = filters.get("documentNumber") == null ? null :"%"+filters.get("documentNumber")[0].toString()+"%";
+
+		String documentNumber = filters.get("documentNumber") == null ? null : "%" + filters.get("documentNumber")[0].toString() + "%";
 		String documentType = filters.get("documentType") == null ? null : filters.get("documentType")[0].toString();
-		
-		if (!documentNumber.isEmpty() && !documentType.isEmpty()) {
-			listSales = salesRepository.findByDocumentNumberLikeAndDocumentType(documentNumber,documentType);
+
+		if (documentNumber != null && documentType != null) {
+			listSales = salesRepository.findByDocumentNumberLikeAndDocumentType(documentNumber, documentType);
 		} else {
 			listSales = salesRepository.findAll();
 		}
@@ -58,6 +63,14 @@ public class SalesServices {
 		salesDto.setDateDelivery(entity.getDateDelivery());
 		salesDto.setAddress(entity.getAddress());
 
+		List<ProductsDTO> listProductsDto = new ArrayList<ProductsDTO>();
+		if (entity.getListSalesProducts() != null) {
+			
+			entity.getListSalesProducts().forEach((salesProducts) -> {
+                listProductsDto.add(productsService.getDto(salesProducts.getProduct()));
+            });
+		}
+		salesDto.setListProducts(listProductsDto);
 		return salesDto;
 	}
 
@@ -68,6 +81,22 @@ public class SalesServices {
 		sales.setPersonName(dto.getPersonName());
 		sales.setDateDelivery(dto.getDateDelivery());
 		sales.setAddress(dto.getAddress());
+		
+		List<SalesProducts> listSalesProducts = new ArrayList<SalesProducts>();
+		if(dto.getListProducts() != null) {
+			for(ProductsDTO productDto : dto.getListProducts()) {
+				Products product = productsService.getProductById(productDto.getId());
+				
+				SalesProducts salesProducts = new SalesProducts();
+				salesProducts.setProduct(product);
+				salesProducts.setSale(sales);
+				salesProducts.setQuantity((long) 1);
+				salesProducts.setPrice(product.getPrice());
+				
+				listSalesProducts.add(salesProducts);
+			}
+		}
+		sales.setListSalesProducts(listSalesProducts);
 		return sales;
 	}
 }

@@ -29,12 +29,17 @@ public class ProductsService {
         productDto.setName(entity.getName());
         productDto.setPrice(entity.getPrice());
         productDto.setSize(entity.getSize());
+        productDto.setGender(entity.getGender());
         return productDto;
         
     }
 
     public List<Products> getAll() {
         return productsRepository.findAll();
+    }
+    
+    public Products getProductById(Long productId) {
+    	return productsRepository.getById(productId);
     }
 
 }

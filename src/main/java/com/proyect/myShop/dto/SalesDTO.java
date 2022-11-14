@@ -6,6 +6,8 @@
 package com.proyect.myShop.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,4 +25,5 @@ public class SalesDTO {
     private String personName;
     private Timestamp dateDelivery;
     private String address;
+    private List<ProductsDTO> listProducts;
 }
