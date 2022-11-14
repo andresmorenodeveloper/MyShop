@@ -39,19 +39,11 @@ public class SalesServices {
 		return salesRepository.save(sales);
 	}
 
-	public List<SalesDTO> getAll(Map<String, String[]> filters) {
-		List<Sales> listSales = new ArrayList<Sales>();
+	public List<SalesDTO> getAll() {
 		List<SalesDTO> listSalesDto = new ArrayList<SalesDTO>();
 		
-		String documentNumber = filters.get("documentNumber") == null ? null : "%" + filters.get("documentNumber")[0].toString() + "%";
-		String documentType = filters.get("documentType") == null ? null : filters.get("documentType")[0].toString();
-
-		if (documentNumber != null && documentType != null) {
-			listSales = salesRepository.findByDocumentNumberLikeAndDocumentType(documentNumber, documentType);
-		} else {
-			listSales = salesRepository.findAll();
-		}
-		
+		List<Sales> listSales = salesRepository.findAll();
+				
         listSales.forEach((entity) -> {
             listSalesDto.add(getDto(entity));
         });

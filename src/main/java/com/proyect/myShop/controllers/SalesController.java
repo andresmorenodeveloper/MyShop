@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,15 +47,14 @@ public class SalesController {
     @Autowired
     Utils utils;
 
-    @GetMapping
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar registros", notes = "Servicio para listar todos los registros")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Registros encontrados"),
         @ApiResponse(code = 204, message = "Registros no encontrados")})
-	public ResponseEntity<List<SalesDTO>> getAll(HttpServletRequest request) {
+	public ResponseEntity<List<SalesDTO>> getAll() {
 
-        Map<String, String[]> filters = utils.getSearchParameters(request);
-        List<SalesDTO> listSalesDto = salesServices.getAll(filters);        
+        List<SalesDTO> listSalesDto = salesServices.getAll();        
         return ResponseEntity.ok(listSalesDto);
     }
 

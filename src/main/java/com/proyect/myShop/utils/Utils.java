@@ -42,11 +42,4 @@ public class Utils {
 
     }
 
-    public Map<String, String[]> getSearchParameters(HttpServletRequest request) {
-        Map<String, String[]> parameters = new HashMap<String, String[]>();
-        Map<String, String[]> filters = request.getParameterMap();
-        parameters.putAll(filters);
-        return parameters;
-    }
-
 }
