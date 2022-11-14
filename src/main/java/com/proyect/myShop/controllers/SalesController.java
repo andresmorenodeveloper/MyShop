@@ -11,6 +11,7 @@ import com.proyect.myShop.dto.SalesDTO;
 import com.proyect.myShop.models.Sales;
 import com.proyect.myShop.service.SalesServices;
 import com.proyect.myShop.utils.Response;
+import com.proyect.myShop.utils.Utils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -41,8 +42,9 @@ public class SalesController {
 
     @Autowired
     SalesServices salesServices;
-
-    Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
+    
+    @Autowired
+    Utils utils;
 
     @GetMapping
     @ApiOperation(value = "Listar registros", notes = "Servicio para listar todos los registros")
@@ -51,7 +53,7 @@ public class SalesController {
         @ApiResponse(code = 204, message = "Registros no encontrados")})
     private ResponseEntity<Response> getAl(HttpServletRequest request) {
 
-        Map<String, String[]> filters = getSearchParameters(request);
+        Map<String, String[]> filters = utils.getSearchParameters(request);
 
         Response<List<SalesDTO>> response = new Response<List<SalesDTO>>();
         List<SalesDTO> listSalesDto = new ArrayList<SalesDTO>();
@@ -61,7 +63,7 @@ public class SalesController {
             listSales.forEach((entity) -> {
                 listSalesDto.add(salesServices.getDto(entity));
             });
-            printDto(listSalesDto);
+            utils.printDto(listSalesDto,"INFORMACION DE LAS VENTAS");
             response.setData(listSalesDto);
             response.setMessage("Consulta realizada correctamente");
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -92,21 +94,5 @@ public class SalesController {
         }
 
     }
-
-    public void printDto(List<SalesDTO> listSalesDto) {
-
-        System.out.println("INFORMACION DE LAS VENTAS");
-        System.out.println("**********************************");
-        System.out.println(gson1.toJson(listSalesDto));
-        System.out.println("**********************************");
-
-    }
-
-    protected Map<String, String[]> getSearchParameters(HttpServletRequest request) {
-        Map<String, String[]> parameters = new HashMap<String, String[]>();
-        Map<String, String[]> filters = request.getParameterMap();
-        parameters.putAll(filters);
-        return parameters;
-    }
-
+    
 }
