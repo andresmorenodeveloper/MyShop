@@ -20,6 +20,7 @@ import java.util.List;
 import com.proyect.myShop.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,32 +39,14 @@ public class ProductsController {
     @Autowired
     private ProductsService productsService;
 
-    @Autowired
-    Utils utils;
-
-    @GetMapping
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar registros", notes = "Servicio para listar todos los registros")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Registros encontrados"),
         @ApiResponse(code = 204, message = "Registros no encontrados")})
-    private ResponseEntity<Response> getAll() {
-        Response<List<ProductsDTO>> response = new Response<List<ProductsDTO>>();
-        List<ProductsDTO> listProductsDto = new ArrayList<ProductsDTO>();
-
-        List<Products> listProducts = productsService.getAll();
-        if (!listProducts.isEmpty()) {
-            listProducts.forEach((entity) -> {
-                listProductsDto.add(productsService.getDto(entity));
-            });
-            utils.printDto(listProductsDto);
-            response.setData(listProductsDto);
-            response.setMessage("Consulta realizada correctamente");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            response.setData(null);
-            response.setMessage("No se encontro informacion");
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<List<ProductsDTO>> getAll() {
+        List<ProductsDTO> listProductsDto  = productsService.getAll();
+        return ResponseEntity.ok(listProductsDto);
     }
 
 }

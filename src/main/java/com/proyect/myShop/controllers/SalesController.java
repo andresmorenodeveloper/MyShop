@@ -51,27 +51,11 @@ public class SalesController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Registros encontrados"),
         @ApiResponse(code = 204, message = "Registros no encontrados")})
-    private ResponseEntity<Response> getAl(HttpServletRequest request) {
+	public ResponseEntity<List<SalesDTO>> getAll(HttpServletRequest request) {
 
         Map<String, String[]> filters = utils.getSearchParameters(request);
-
-        Response<List<SalesDTO>> response = new Response<List<SalesDTO>>();
-        List<SalesDTO> listSalesDto = new ArrayList<SalesDTO>();
-
-        List<Sales> listSales = salesServices.getAll(filters);
-        if (!listSales.isEmpty()) {
-            listSales.forEach((entity) -> {
-                listSalesDto.add(salesServices.getDto(entity));
-            });
-            utils.printDto(listSalesDto,"INFORMACION DE LAS VENTAS");
-            response.setData(listSalesDto);
-            response.setMessage("Consulta realizada correctamente");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            response.setData(null);
-            response.setMessage("No se encontro informacion");
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
+        List<SalesDTO> listSalesDto = salesServices.getAll(filters);        
+        return ResponseEntity.ok(listSalesDto);
     }
 
     @PostMapping
@@ -79,7 +63,7 @@ public class SalesController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Registro creado correctamente"),
         @ApiResponse(code = 400, message = "Solicitud no valida")})
-    public ResponseEntity<Response> create(HttpServletRequest request, @RequestBody @Validated SalesDTO dto) {
+    public ResponseEntity<Response<SalesDTO>> create(HttpServletRequest request, @RequestBody @Validated SalesDTO dto) {
         Response<SalesDTO> response = new Response<SalesDTO>();
 
         Sales entity = salesServices.create(salesServices.getEntity(dto));

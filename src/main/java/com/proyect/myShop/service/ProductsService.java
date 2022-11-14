@@ -8,6 +8,8 @@ package com.proyect.myShop.service;
 import com.proyect.myShop.dto.ProductsDTO;
 import com.proyect.myShop.models.Products;
 import com.proyect.myShop.repository.ProductsRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,14 @@ public class ProductsService {
         
     }
 
-    public List<Products> getAll() {
-        return productsRepository.findAll();
+    public List<ProductsDTO> getAll() {
+    	List<ProductsDTO> listProductsDto = new ArrayList<ProductsDTO>();
+    	
+    	productsRepository.findAll().forEach((entity) -> {
+            listProductsDto.add(getDto(entity));
+        });
+    	
+        return listProductsDto;
     }
     
     public Products getProductById(Long productId) {
